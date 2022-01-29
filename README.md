@@ -13,16 +13,29 @@ git clone https://github.com/tree-sitter/tree-sitter-java
 git clone https://github.com/tree-sitter/tree-sitter-python
 ```
 
-Besides, you need to save your code in a txt file that is more convenient for input.
+Besides, you need to save your code in a **txt** file that is more convenient for input.
 
 ## Usage
 
 To run this program, here is the usage.
 
 ```
-python3 transform_ast_to_json.py --data_dir (txt file that you want to transform) --save_dir (the place you want to save the json file) --language (your code's language)
-e.g. python3 transform_ast_to_json.py --data_dir test_py.txt --save_dir test_py.json --language python
+python3 transform_ast_to_json.py --data_dir (where all the txt files that you want to transform are saved) 
+\--save_dir (the place you want to save the jsonl file and matrix) 
+\--language (your code's language) 
+\--saving_matrix (type 1 or 0 to determine whether you want to save the adjacent matrix or not)
+e.g. python3 transform_ast_to_json.py --data_dir test \
+--save_dir save --language python --saving_matrix 1
 ```
+
+Notice that:
+
+- In each data directory, you must save the txt files of same languages.
+- You need to save the txt file in the following sequence:
+  - data_dir/[name1].txt
+  - data_dir/[name2].txt
+
+For saving, the program will generate a dictionary for each source code. Then it will save all those dictionaries into one jsonline file called 'saving.jsonl' in sequence. To avoid overlap, please use different saving directory while processing different groups of source codes.
 
 The program currently supports python, java, and javascript. If you want to transform other languages, you may need to git clone the library you need and edit the source code of the program. 
 
@@ -37,7 +50,7 @@ def foo(a,b):
         baz()
 ```
 
-### Generated JSON File
+### Generated JSONL File (one line)
 
 ```
 {
@@ -91,6 +104,6 @@ def foo(a,b):
 }
 ```
 
-### Adjacent Matrix
+### Adjacent Matrix (for one source code)
 
 ![Figure_1](Figure_1.png)
