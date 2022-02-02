@@ -1,4 +1,0 @@
-def foo(a,b):
-    if bar:
-        (a+b)*2
-        baz()

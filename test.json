@@ -1,0 +1,1 @@
+{"0": "def foo(a,b):\n    if bar:\n        (a+b)*2\n        baz()", "1": "def foo(a,b):\n    if bar:\n        (a+b)*2\n        baz()"}

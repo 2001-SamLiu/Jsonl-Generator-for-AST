@@ -27,7 +27,7 @@ parser = Parser()
 Node = namedtuple('Node', ['type', 'start', 'end', 'id'])
 
 
-def read_to_ast(filename,language):
+def read_to_ast(data,language):
     if language=='java':
         parser.set_language(JAVA_LANGUAGE)
     elif language=='python':
@@ -37,13 +37,11 @@ def read_to_ast(filename,language):
     else:
         print("not supporting language")
         return None
-    with open(filename, "r") as f:
-        data = f.read()
     tree = parser.parse(bytes(data, "utf8"))
     return tree
 
 
-def get_dict(tree,saving_matrix,saving_dir,filename):  # use breadth-first search to create the tree
+def get_dict(tree,saving_matrix,saving_dir,index):  # use breadth-first search to create the tree
     if tree==None:
         return
     root_node = tree.root_node
@@ -66,10 +64,10 @@ def get_dict(tree,saving_matrix,saving_dir,filename):  # use breadth-first searc
         matrix=np.array(relation_matrix)
         if not os.path.exists('%s/matrix'%(saving_dir)):
             os.mkdir('%s/matrix'%(saving_dir))
-        filename=filename.split('.')[0]
-        np.save('%s/matrix/%s'%(saving_dir,filename),matrix)
-    # plt.matshow(relation_matrix)
-    # plt.show()
+
+        np.save('%s/matrix/%s'%(saving_dir,index),matrix)
+    plt.matshow(relation_matrix)
+    plt.show()
     # with open("%s" % filename, "w") as f:
     #     json.dump(whole_tree, f, indent=2)
     return whole_tree
@@ -100,17 +98,19 @@ def breadth_search(node, index,relation_matrix,saving_matrix):
 
 if __name__ == '__main__':
     parser_ = argparse.ArgumentParser(description='transform ast to json file')
-    parser_.add_argument('--data_dir', type=str, help='txt file directory')
-    parser_.add_argument('--save_dir', type=str, help='json file saving directory')
+    parser_.add_argument('--data_dir', type=str, help='json file directory')
+    parser_.add_argument('--save_dir', type=str, help='jsonline file saving directory')
     parser_.add_argument('--language', type=str, help='language you would like to transform')
     parser_.add_argument('--saving_matrix', type=bool, help='to decide whether you want to generate adjacent matrix')
     args = parser_.parse_args()
-    txt_dir = args.data_dir
-    txt_file=sorted(os.listdir('%s' % (txt_dir)))
+    json_dir = args.data_dir
     if not os.path.exists(args.save_dir):
         os.mkdir(args.save_dir)
     jsonl_file=jsonlines.open('%s/saving.jsonl'%(args.save_dir),"w")
-    for i, item in enumerate(txt_file):
-        tree = read_to_ast('%s/%s'%(txt_dir,item),args.language)
-        tree_dict=get_dict(tree,args.saving_matrix,args.save_dir,item)
+    with open(json_dir,'r') as f:
+        data=json.load(f)
+    for key in data:
+        print(data[key])
+        tree = read_to_ast(data[key],args.language)
+        tree_dict=get_dict(tree,args.saving_matrix,args.save_dir,key)
         jsonlines.Writer.write(jsonl_file,tree_dict)

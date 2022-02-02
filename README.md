@@ -1,6 +1,6 @@
-# Transform_AST_to_JSON
+# JSONL-Generator-for-AST
 
-This repository provides program for transforming AST to JSON file.
+This repository provides service for generating  JSONL file of the ASTs of source codes written in different languages.
 
 ## Prerequisite
 
@@ -20,37 +20,32 @@ Besides, you need to save your code in a **txt** file that is more convenient fo
 To run this program, here is the usage.
 
 ```
-python3 transform_ast_to_json.py --data_dir (where all the txt files that you want to transform are saved) 
-\--save_dir (the place you want to save the jsonl file and matrix) 
+python3 jsonl_generator_for_ast.py --data_dir (where the JSON file that you want to generate its codes' ASTs to JSONL file is saved) 
+\--save_dir (the place you want to save the JSONL file and matrix) 
 \--language (your code's language) 
 \--saving_matrix (type 1 or 0 to determine whether you want to save the adjacent matrix or not)
-e.g. python3 transform_ast_to_json.py --data_dir test \
+e.g. python3 jsonl_generator_for_ast.py --data_dir test.json \
 --save_dir save --language python --saving_matrix 1
 ```
 
 Notice that:
 
-- In each data directory, you must save the txt files of same languages.
-- You need to save the txt file in the following sequence:
-  - data_dir/[name1].txt
-  - data_dir/[name2].txt
+- You need to save all the source codes in one JSON file. In the JSON file, the source codes should be the value of the dictionary and each unique source code should have unique key.
+- All the source codes in one JSON file should be written in the same languages.
 
-For saving, the program will generate a dictionary for each source code. Then it will save all those dictionaries into one jsonline file called 'saving.jsonl' in sequence. To avoid overlap, please use different saving directory while processing different groups of source codes.
+For saving, the program will generate a dictionary for each source code. Then it will save all those dictionaries into one JSONL file called 'saving.jsonl' in sequence. To avoid overlapping, please use different saving directory while processing different groups of source codes.
 
-The program currently supports python, java, and javascript. If you want to transform other languages, you may need to git clone the library you need and edit the source code of the program. 
+The program is currently supporting python, java, and javascript. If you want to generate other languages, you may need to git clone the library you need and edit the source code of the program. 
 
 ## Example
 
-### Source Code
+### Source JSON File
 
 ```
-def foo(a,b):
-    if bar:
-        (a+b)*2
-        baz()
+{"0": "def foo(a,b):\n    if bar:\n        (a+b)*2\n        baz()"}
 ```
 
-### Generated JSONL File (one line)
+### Generated JSONL File
 
 ```
 {
@@ -104,6 +99,6 @@ def foo(a,b):
 }
 ```
 
-### Adjacent Matrix (for one source code)
+### Adjacent Matrix 
 
 ![Figure_1](Figure_1.png)
